@@ -115,7 +115,7 @@ fun DashboardScreen() {
                         val konser = konserList[0]
 
                         nav.navigate(
-                            "detail/${konser.id}"
+                            "detail/${konser.nama}"
                         )
                     }
             ) {
