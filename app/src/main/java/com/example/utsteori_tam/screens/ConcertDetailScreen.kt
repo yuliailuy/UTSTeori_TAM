@@ -21,14 +21,15 @@ import androidx.compose.ui.unit.dp
 import com.example.utsteori_tam.components.GradientButton
 import com.example.utsteori_tam.navigation.LocalNav
 import tiket.KonserSource
-
+import coil.compose.AsyncImage
+import com.example.utsteori_tam.data.KonserRepository
 @Composable
 fun ConcertDetailScreen(concertId: String) {
 
     val nav = LocalNav.current
 
     val konser =
-        KonserSource.listKonser.find {
+        KonserRepository.konserList.find {
             it.nama == concertId
         }
 
@@ -54,19 +55,13 @@ fun ConcertDetailScreen(concertId: String) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Image(
-            painter = painterResource(
-                konser?.imageRes
-                    ?: android.R.drawable.ic_menu_gallery
-            ),
-
+        AsyncImage(
+            model = konser?.imageUrl,
             contentDescription = null,
-
             modifier = Modifier
                 .fillMaxWidth()
                 .height(180.dp)
                 .clip(RoundedCornerShape(20.dp)),
-
             contentScale = ContentScale.Crop
         )
 

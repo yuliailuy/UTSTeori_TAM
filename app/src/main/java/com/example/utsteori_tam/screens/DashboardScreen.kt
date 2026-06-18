@@ -22,19 +22,44 @@ import com.example.utsteori_tam.components.BottomNav
 import com.example.utsteori_tam.components.GradientButton
 import com.example.utsteori_tam.navigation.LocalNav
 import tiket.KonserSource
+import androidx.compose.runtime.*
+import coil.compose.AsyncImage
+import com.example.utsteori_tam.data.KonserRepository
+import com.example.utsteori_tam.data.RetrofitClients
+import com.example.utsteori_tam.model.Konser
 
 @Composable
 fun DashboardScreen() {
 
     val nav = LocalNav.current
-    val data = KonserSource.listKonser
+    var konserList by remember {
+        mutableStateOf<List<Konser>>(emptyList())
+    }
 
     var search by remember {
         mutableStateOf("")
     }
 
-    val filtered = data.filter {
-        it.nama.contains(search, true)
+    LaunchedEffect(Unit) {
+        try {
+
+            val data =
+                RetrofitClients.api.getKonser()
+
+            konserList = data
+
+            KonserRepository.konserList = data
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    val filtered = konserList.filter {
+        it.nama.contains(
+            search,
+            ignoreCase = true
+        )
     }
 
     Column(
@@ -78,7 +103,7 @@ fun DashboardScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (data.isNotEmpty()) {
+        if (konserList.isNotEmpty()) {
 
             Box(
                 modifier = Modifier
@@ -87,20 +112,18 @@ fun DashboardScreen() {
                     .clip(RoundedCornerShape(20.dp))
                     .clickable {
 
-                        val konser = data[0]
+                        val konser = konserList[0]
 
                         nav.navigate(
-                            "detail/${konser.nama}"
+                            "detail/${konser.id}"
                         )
                     }
             ) {
 
-                Image(
-                    painter = painterResource(data[0].imageRes),
+                AsyncImage(
+                    model = konserList[0].imageUrl,
                     contentDescription = null,
-
                     modifier = Modifier.fillMaxSize(),
-
                     contentScale = ContentScale.Crop
                 )
 
@@ -111,7 +134,7 @@ fun DashboardScreen() {
                 ) {
 
                     Text(
-                        data[0].nama,
+                        konserList[0].nama,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -122,7 +145,7 @@ fun DashboardScreen() {
                         text = "Book Ticket"
                     ) {
 
-                        val konser = data[0]
+                        val konser = konserList.first()
 
                         nav.navigate(
                             "detail/${konser.nama}"
@@ -161,14 +184,12 @@ fun DashboardScreen() {
 
                     Column {
 
-                        Image(
-                            painter = painterResource(konser.imageRes),
+                        AsyncImage(
+                            model = konser.imageUrl,
                             contentDescription = null,
-
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp),
-
                             contentScale = ContentScale.Crop
                         )
 

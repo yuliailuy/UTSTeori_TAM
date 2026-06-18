@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.utsteori_tam.navigation.LocalNav
 import tiket.KonserSource
+import coil.compose.AsyncImage
+import com.example.utsteori_tam.data.KonserRepository
 
 @Composable
 fun QuantityScreen(
@@ -35,7 +37,7 @@ fun QuantityScreen(
         mutableStateOf(1)
     }
     val konser =
-        KonserSource.listKonser.find {
+        KonserRepository.konserList.find {
             it.nama == concertId
         }
     val (categoryName, price, categoryColor) =
@@ -101,12 +103,8 @@ fun QuantityScreen(
                     .padding(14.dp)
             ) {
 
-                Image(
-                    painter = painterResource(
-                        konser?.imageRes
-                            ?: android.R.drawable.ic_menu_gallery
-                    ),
-
+                AsyncImage(
+                    model = konser?.imageUrl,
                     contentDescription = null,
 
                     modifier = Modifier

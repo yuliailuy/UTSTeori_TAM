@@ -22,6 +22,8 @@ import com.example.utsteori_tam.components.GradientButton
 import com.example.utsteori_tam.data.userTickets
 import com.example.utsteori_tam.navigation.LocalNav
 import tiket.KonserSource
+import coil.compose.AsyncImage
+import com.example.utsteori_tam.data.KonserRepository
 
 @Composable
 fun MyTicketScreen() {
@@ -50,7 +52,7 @@ fun MyTicketScreen() {
             items(userTickets) { ticket ->
 
                 val konser =
-                    KonserSource.listKonser.find {
+                    KonserRepository.konserList.find {
                         it.nama == ticket.concertId
                     }
 
@@ -66,12 +68,8 @@ fun MyTicketScreen() {
                         modifier = Modifier.padding(16.dp)
                     ) {
 
-                        Image(
-                            painter = painterResource(
-                                konser?.imageRes
-                                    ?: R.drawable.konsero
-                            ),
-
+                        AsyncImage(
+                            model = konser?.imageUrl,
                             contentDescription = null,
 
                             modifier = Modifier

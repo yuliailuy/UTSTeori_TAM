@@ -22,6 +22,8 @@ import com.example.utsteori_tam.model.Ticket
 import com.example.utsteori_tam.navigation.LocalNav
 import com.example.utsteori_tam.utils.generateSeats
 import tiket.KonserSource
+import coil.compose.AsyncImage
+import com.example.utsteori_tam.data.KonserRepository
 
 @Composable
 fun CheckoutScreen(
@@ -33,7 +35,7 @@ fun CheckoutScreen(
     val nav = LocalNav.current
 
     val konser =
-        KonserSource.listKonser.find {
+        KonserRepository.konserList.find {
             it.nama == concertId
         }
 
@@ -92,12 +94,8 @@ fun CheckoutScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
 
-                Image(
-                    painter = painterResource(
-                        konser?.imageRes
-                            ?: android.R.drawable.ic_menu_gallery
-                    ),
-
+                AsyncImage(
+                    model = konser?.imageUrl,
                     contentDescription = null,
 
                     modifier = Modifier
