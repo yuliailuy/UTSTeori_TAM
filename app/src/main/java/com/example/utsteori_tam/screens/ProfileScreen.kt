@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.utsteori_tam.R
 import com.example.utsteori_tam.components.BottomNav
+import com.example.utsteori_tam.components.GradientButton
 import com.example.utsteori_tam.navigation.LocalNav
 
 @Composable
@@ -32,11 +33,10 @@ fun ProfileScreen() {
     val nav = LocalNav.current
     val context = LocalContext.current
 
-    val pref =
-        context.getSharedPreferences(
-            "USER",
-            Context.MODE_PRIVATE
-        )
+    val pref = context.getSharedPreferences(
+        "USER",
+        Context.MODE_PRIVATE
+    )
 
     val currentUser =
         pref.getString("currentUser", "")
@@ -48,6 +48,7 @@ fun ProfileScreen() {
             .background(Color.White)
             .statusBarsPadding()
     ) {
+
 
         Box {
 
@@ -62,7 +63,6 @@ fun ProfileScreen() {
                                 Color(0xFFFF4DA6)
                             )
                         ),
-
                         shape = RoundedCornerShape(
                             bottomStart = 40.dp,
                             bottomEnd = 40.dp
@@ -85,16 +85,11 @@ fun ProfileScreen() {
                     tint = Color.White
                 )
             }
-
             Text(
-                "Profile",
-
+                text = "Profile",
                 color = Color.White,
-
                 fontWeight = FontWeight.Bold,
-
                 style = MaterialTheme.typography.headlineSmall,
-
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 16.dp)
@@ -103,63 +98,52 @@ fun ProfileScreen() {
             Image(
                 painter = painterResource(R.drawable.profile),
                 contentDescription = null,
-
                 modifier = Modifier
                     .size(130.dp)
                     .align(Alignment.BottomCenter)
                     .offset(y = 65.dp)
                     .clip(CircleShape),
-
                 contentScale = ContentScale.Crop
             )
         }
 
         Spacer(modifier = Modifier.height(90.dp))
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
         ) {
-
             Text(
-                "Nama",
+                text = "Nama",
                 color = Color(0xFF8E2DE2)
             )
 
             Spacer(modifier = Modifier.height(4.dp))
-
             Text(
-                currentUser,
+                text = currentUser,
                 fontWeight = FontWeight.Bold,
-
                 style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Divider()
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
-                "Email",
+                text = "Email",
                 color = Color(0xFFFF4DA6)
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                "$currentUser@gmail.com",
-
+                text = "$currentUser@gmail.com",
                 style = MaterialTheme.typography.titleMedium
             )
 
             Spacer(modifier = Modifier.height(26.dp))
-
             Card(
                 shape = RoundedCornerShape(20.dp),
-
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFEDEAF5)
                 )
@@ -169,9 +153,7 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-
-                    verticalAlignment =
-                        Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
 
                     Box(
@@ -181,10 +163,8 @@ fun ProfileScreen() {
                                 Color(0xFFE6B4CF),
                                 CircleShape
                             ),
-
                         contentAlignment = Alignment.Center
                     ) {
-
                         Icon(
                             Icons.Default.Person,
                             contentDescription = null,
@@ -193,31 +173,53 @@ fun ProfileScreen() {
                     }
 
                     Spacer(modifier = Modifier.width(14.dp))
-
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
 
                         Text(
-                            "Ubah Foto Profil",
+                            text = "Ubah Foto Profil",
                             fontWeight = FontWeight.Bold
                         )
 
                         Text(
-                            "Pilih foto baru untuk akun kamu",
+                            text = "Pilih foto baru untuk akun kamu",
+
                             color = Color.Gray
                         )
                     }
-
                     Text(
-                        ">",
+                        text = ">",
                         color = Color.Gray
                     )
                 }
             }
         }
-
         Spacer(modifier = Modifier.weight(1f))
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+
+            GradientButton(
+                text = "Logout"
+            ) {
+                pref.edit()
+                    .remove("currentUser")
+                    .apply()
+
+                nav.navigate("login") {
+                    popUpTo("home") {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
         BottomNav(current = "profile")
     }
